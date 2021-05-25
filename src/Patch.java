@@ -1,4 +1,6 @@
 import java.math.*;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class Patch {
 
@@ -13,12 +15,12 @@ public class Patch {
         this.albedoOfSurface = albedoOfSurface;
     }
 
-
-    public void calTemp (Sun sun){
+    // absorb from sun, which each patch's temparature.
+    public void absorb (Sun sun){
 
         Double absorbedLuminosity = 0.0;
         
-        if (OpenGround()){
+        if (openGround()){
             /* the percentage of absorbed energy is calculated (1 - albedoOfSurface) 
                and then multiplied by the solar-luminosity give a scaled absorbedLuminosity. */
             absorbedLuminosity = ((1 - albedoOfSurface) * sun.getLuminosity());
@@ -46,25 +48,82 @@ public class Patch {
            the current temperature and the local-heating effect */
         temp = (temp + localHeating) / 2;
     }
-    
-    
 
+    /* Find all neighbours based on current position */
+    public ArrayList<Patch> neighbourPatchs(int x, int y, Patch[][] ground){
 
-
-    // private void sproutDaisyByNeighbor (Patch neigh){
-
-    //     Daisy neighDaisy = neigh.getDaisy();
-    //     Daisy d = new Daisy();
-    //     if (neighDaisy.getColor() == Daisy.DaisyColor.BLACK){ 
-    //         d.setBlack();
-    //     }else if (neighDaisy.getColor() == Daisy.DaisyColor.WHITE){
-    //         d.setWhite();
-    //     }
+       
         
-    // }
+        ArrayList<Position> neighPos = new ArrayList<>(); 
+        ArrayList<Patch> neighs = new ArrayList<>(); 
+
+        
+
+            neighPos.add(new Position(x, y-1));
+            neighPos.add(new Position(x, y+1));
+            neighPos.add(new Position(x+1, y));
+            neighPos.add(new Position(x-1, y));
+            neighPos.add(new Position(x-1, y-1));
+            neighPos.add(new Position(x+1, y-1));
+            neighPos.add(new Position(x-1, y+1));
+            neighPos.add(new Position(x+1, y+1));
+
+            for (int i = 0; i < 8; i++){
+                int a = neighPos.get(i).getX();
+                int b = neighPos.get(i).getY();
+                if (0 <= a && a < Params.LENGTH && 0 <= b && b < Params.LENGTH ){
+                    if(!ground[a][b].openGround()){
+                        neighs.add(ground[a][b]);
+                    }
+                }
+                
+            }
 
 
-    public Boolean OpenGround (){
+        
+
+        
+        return neighs;
+    }
+    
+    
+
+    /*  
+     *  This function is to randomly choose a neighbour and inherits daisy if it is openGround
+     */
+    public void sproutDaisyByNeighbour (int x, int y, ArrayList<Patch> neighbors){
+
+    
+        double seedThreshold = (0.1457 * temp) - (0.0032 * (temp * temp)) - 0.6443;
+        Random random = new Random();
+        double survivability = random.nextDouble();
+
+        if (survivability < seedThreshold){
+            
+            /* randomly choose a neighbour and inherits daisy from it */
+            if(openGround()){
+
+                /* randomly find a parentDaisy from neighbours */
+                int index = random.nextInt(neighbors.size());
+                Daisy parentDaisy = neighbors.get(index).getDaisy();
+
+                /* inherits daisy */
+                this.daisy = new Daisy();
+                if (parentDaisy.getColor() == Daisy.DaisyColor.BLACK){
+                    daisy.setBlack(parentDaisy.getAlbedo(), 0);
+                }else if (parentDaisy.getColor() == Daisy.DaisyColor.WHITE){
+                    daisy.setWhite(parentDaisy.getAlbedo(), 0);
+                }
+
+
+            }
+
+        }
+        
+    }
+
+
+    public Boolean openGround (){
         return daisy == null;
     }
 

@@ -6,7 +6,7 @@ public class Sim {
 
     public static void main(String[] args) {
 
-        
+        // Set up the environment based on the following information 
         // Scanner in = new Scanner(System.in);
 
         // System.out.println("Please Input albedoOfSurface between 0 and 1");
@@ -30,7 +30,18 @@ public class Sim {
         // Global daisyWorld = new Global(albedoOfSurface, blackPercentage, whitePercentage,
         //                                blackAlbedo, whiteAlbedo, solarLuminosity);
 
-        Global daisyWorld = new Global (0.4, 15.0, 20.0, 0.35, 0.75, 1.0);
+        Global daisyWorld = new Global (0.4, 10.0, 25.0, 0.35, 0.75, 1.0);
+        daisyWorld.printDaisyWorld();
+
+        for(int tick = 0; tick < Params.TICKS; tick ++){
+            daisyWorld.tick();
+            tick ++;
+        }
+
+
+        System.out.println("***********************************");
+
+
         daisyWorld.printDaisyWorld();
 
         

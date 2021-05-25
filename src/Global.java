@@ -8,9 +8,8 @@ public class Global {
     private Patch[][] ground;
 
     private ArrayList<Double> globalTemperature;
-    private ArrayList<Double> whitePopulation;
-    private ArrayList<Double> blackPopulation;
-    
+    private ArrayList<Integer> whitePopulation;
+    private ArrayList<Integer> blackPopulation;
 
 
     /* Need to get from command */
@@ -38,6 +37,7 @@ public class Global {
         sun = new Sun(solarLuminosity);
 
         ground = new Patch[Params.LENGTH][Params.LENGTH];
+
         // Initialize daisy world
         for (int i = 0; i < Params.LENGTH; i++) {
             for (int j = 0; j < Params.LENGTH; j++) {
@@ -56,20 +56,25 @@ public class Global {
         // Absort from sun
         absorbFromSun();
 
-        // calculate global temperature
-        calGlobalTemp();
+        // record global temperature
+        globalTempRecord();
+
+        // record population of black daisies & white daisies
+        populationRecord();
     }
 
-
+    /* Calculate temperature after absorbing from sun */
     private void absorbFromSun() {
+
         for (int i = 0; i < Params.LENGTH; i++) {
             for (int j = 0; j < Params.LENGTH; j++) {
-                ground[i][j].calTemp(sun);
+                ground[i][j].absorb(sun);
             }
         }
     }
 
-    private void calGlobalTemp(){
+    /* Record global temperature at each tick */
+    private void globalTempRecord(){
 
         Double totalTemp = 0.0;
 
@@ -86,6 +91,32 @@ public class Global {
     }
 
 
+    /* Record black & white population on the daisyworld at each tick */
+    private void populationRecord(){
+
+        int black = 0;
+        int white = 0;
+
+        for (int i = 0; i < Params.LENGTH; i ++){
+            for (int j = 0; j < Params.LENGTH; j++){
+                Patch p = ground[i][j];
+                if (!p.openGround()){
+                    Daisy d = p.getDaisy();
+                    if (d.getColor() == Daisy.DaisyColor.BLACK){
+                        black += 1;
+                    }else{
+                        white += 1;
+                    }
+                }
+            }
+        }
+
+        blackPopulation.add(black);
+        whitePopulation.add(white);
+
+    }
+
+    /* Seed Daisies with particular numbers of black daisies and white daisies */
     private void seedDaisies(Patch[][] ground, Double blackNum, Double whiteNum ){
 
         randomSeed(ground, blackNum, Daisy.DaisyColor.BLACK);
@@ -93,9 +124,10 @@ public class Global {
        
     }
 
+
+    /* Seed daisies at random position with random age */
     private void randomSeed(Patch[][] ground, Double num, Daisy.DaisyColor color){
 
-        
         Random random = new Random();
 
         int n = 0;
@@ -107,11 +139,14 @@ public class Global {
             int y = random.nextInt(Params.LENGTH);
             int age = random.nextInt(Params.MAXAGE);
 
-            if (ground[x][y].OpenGround()){
+            if (ground[x][y].openGround()){
+                Daisy d = new Daisy();
                 if (color == Daisy.DaisyColor.BLACK){
-                    ground[x][y].setDaisy(new Daisy(age, color, blackAlbedo));
+                    d.setBlack(blackAlbedo, age);
+                    ground[x][y].setDaisy(d);
                 }else if (color == Daisy.DaisyColor.WHITE){
-                    ground[x][y].setDaisy(new Daisy(age, color, whiteAlbedo));
+                    d.setWhite(whiteAlbedo, age);
+                    ground[x][y].setDaisy(d);
                 }    
                n ++;
             }
@@ -119,14 +154,14 @@ public class Global {
         }
     }
 
-
+    /* Display the daisy world */
     public void printDaisyWorld(){
 
         for (int i = 0; i < Params.LENGTH; i++) {
             for (int j = 0; j < Params.LENGTH; j++) {
                 
                 Patch patch = ground[i][j];
-                if (patch.OpenGround()){
+                if (patch.openGround()){
                     System.out.printf(" ");
                 }else {
                     Daisy daisy = patch.getDaisy();
@@ -143,9 +178,71 @@ public class Global {
     }
 
 
-    public Patch[][] getGround(){
-        return ground;
+    /* Daisy grows up at die when age reach max */
+    public void growAndDie(){
+
+        for (int i = 0; i < Params.LENGTH; i++){
+            for(int j = 0; j < Params.LENGTH; j++){
+                Patch p = ground[i][j];
+                if(!p.openGround()){
+                    Daisy d = p.getDaisy();
+                    if (d.getAge() >= Params.MAXAGE){
+                        p.setDaisy(null);
+                    }
+                    d.grow();     
+                }
+            }
+                
+        }
+
     }
+    
+
+  
+
+    public void reproduce(){
+
+        for (int i = 0; i < Params.LENGTH; i++) {
+            for (int j = 0; j < Params.LENGTH; j++) {
+                Patch p = ground[i][j];
+                ArrayList<Patch> neighbor = p.neighbourPatchs(i, j, ground);
+                p.sproutDaisyByNeighbour(i, j, neighbor);
+            }
+        }
+
+    }
+    
+    public void diffuseToNeighbor(){
+
+
+
+    }
+    
+    
+    
+    /* At each tick, 
+       1. each patch absorb energy from sun
+       2. diffuse temperature to neighbours
+       4. sprout out daisies on neighbour patch
+       3. each daisy grow up / die  */
+
+    public void tick(){
+        absorbFromSun();
+        reproduce();
+        diffuseToNeighbor();
+        growAndDie();
+
+        // record global temperature
+        globalTempRecord();
+
+        // record population of black daisies & white daisies
+        populationRecord();
+
+        
+    }
+
+
+
 
 
 
