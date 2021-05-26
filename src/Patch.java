@@ -122,28 +122,6 @@ public class Patch {
         }        
     }
 
-    private Patch getOpenPatch(ArrayList<Patch> neighbours) {
-
-        // Random random = new Random();
-        
-        // while (neighbours.size() > 0) {
-        //     int index = random.nextInt(neighbours.size());
-        //     Patch p = neighbours.get(index);
-        //     if (p.openGround()) {
-        //         return p;
-        //     }
-        //     neighbours.remove(index);
-        // }
-
-        for (Patch p: neighbours) {
-            if (p.openGround()) {
-                return p;
-            }
-        }
-
-        return null;
-    }
-
     /**
      * Check whether the patch contains a daisy or not
      * @return true if patch is empty, false otherwise
