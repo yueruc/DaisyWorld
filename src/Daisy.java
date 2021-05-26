@@ -9,7 +9,7 @@ public class Daisy {
 
     public Daisy (){
         
-     }
+    }
 
     public void grow() {
         age ++;
@@ -40,5 +40,16 @@ public class Daisy {
         return albedo;
     }
 
+    public String toString() {
+        switch (color) {
+            case BLACK:
+                return "\u25CF";
+            case WHITE:
+                return "\u25CB";
+            // Invalid color
+            default:
+                return "x";
+        }
+    }
 
 }

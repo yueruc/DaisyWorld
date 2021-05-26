@@ -1,4 +1,3 @@
-import java.util.Scanner;
 import java.util.ArrayList;
 
 
@@ -31,9 +30,9 @@ public class Sim {
         //                                blackAlbedo, whiteAlbedo, solarLuminosity);
 
         Global daisyWorld = new Global (0.4, 10.0, 25.0, 0.35, 0.75, 1.0);
-        daisyWorld.printDaisyWorld();
-
+        daisyWorld.initialise();
         
+        daisyWorld.printDaisyWorld();
 
         for(int tick = 1; tick < Params.TICKS; tick ++){
             daisyWorld.tick();
@@ -55,12 +54,7 @@ public class Sim {
         System.out.println("Temp: ");
         System.out.println(temp);
 
-
         daisyWorld.printDaisyWorld();
-
-        
-
-
         
     }
     
