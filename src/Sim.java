@@ -1,5 +1,5 @@
 import java.util.Scanner;
-
+import java.util.ArrayList;
 
 
 public class Sim {
@@ -33,13 +33,27 @@ public class Sim {
         Global daisyWorld = new Global (0.4, 10.0, 25.0, 0.35, 0.75, 1.0);
         daisyWorld.printDaisyWorld();
 
-        for(int tick = 0; tick < Params.TICKS; tick ++){
+        
+
+        for(int tick = 1; tick < Params.TICKS; tick ++){
             daisyWorld.tick();
-            tick ++;
         }
 
 
         System.out.println("***********************************");
+
+        ArrayList<Integer> blackPop = daisyWorld.getBlackPopulation();
+        ArrayList<Integer> whitePop = daisyWorld.getWhitePopulation();
+        ArrayList<Double> temp = daisyWorld.getTemp();
+
+        System.out.println("Black: ");
+        System.out.println(blackPop);
+
+        System.out.println("White: ");
+        System.out.println(whitePop);
+
+        System.out.println("Temp: ");
+        System.out.println(temp);
 
 
         daisyWorld.printDaisyWorld();

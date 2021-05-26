@@ -53,8 +53,7 @@ public class Global {
         // Seed daisies
         seedDaisies(ground, blackPercentage * Params.SIZE / 100, whitePercentage * Params.SIZE / 100);
 
-        // Absort from sun
-        absorbFromSun();
+        
 
         // record global temperature
         globalTempRecord();
@@ -75,6 +74,9 @@ public class Global {
 
     /* Record global temperature at each tick */
     private void globalTempRecord(){
+
+        // Absort from sun
+        absorbFromSun();
 
         Double totalTemp = 0.0;
 
@@ -227,18 +229,33 @@ public class Global {
        3. each daisy grow up / die  */
 
     public void tick(){
-        absorbFromSun();
+        //absorbFromSun();
+
+        
         reproduce();
         diffuseToNeighbor();
         growAndDie();
 
         // record global temperature
         globalTempRecord();
-
+       
         // record population of black daisies & white daisies
         populationRecord();
 
         
+    }
+
+
+    public ArrayList<Integer> getWhitePopulation(){
+        return whitePopulation;
+    }
+
+    public ArrayList<Integer> getBlackPopulation(){
+        return blackPopulation;
+    }
+
+    public ArrayList<Double> getTemp(){
+        return globalTemperature;
     }
 
 

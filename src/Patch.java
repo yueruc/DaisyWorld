@@ -101,7 +101,7 @@ public class Patch {
         if (survivability < seedThreshold){
             
             /* randomly choose a neighbour and inherits daisy from it */
-            if(openGround()){
+            if(openGround() && neighbors.size() > 0){
 
                 /* randomly find a parentDaisy from neighbours */
                 int index = random.nextInt(neighbors.size());
