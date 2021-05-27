@@ -28,12 +28,14 @@ public class Patch {
     // and then multiplied by the solar-luminosity give a scaled absorbedLuminosity. 
     // At last, multiplied by a losing-ratio which is calculated based on the distance from 
     // the middle row of all patches
+
     if (openGround()) {
       absorbedLuminosity = ((
         (1 - albedoOfSurface) * sun.getLuminosity()) 
         * (1 - ((2 * (1 - Params.POLAR_RATIO) / Params.LENGTH) 
         * Math.abs(i - (Params.LENGTH / 2)))));
-    } else {
+    } 
+    else {
       // the percentage of absorbed energy is calculated (1 - albedo) 
       // and then multiplied by the solar-luminosity give a scaled absorbedLuminosity. 
       // At last, multiplied by a losing-ratio which is calculated based on the distance 
@@ -43,6 +45,23 @@ public class Patch {
         * Math.abs(i - (Params.LENGTH / 2)))));
     }
 
+        /*
+    if (openGround()) {
+        absorbedLuminosity = (
+          (1 - albedoOfSurface) * sun.getLuminosity() );
+      } 
+      else {
+        absorbedLuminosity = (
+        		(1 - daisy.getAlbedo()) * sun.getLuminosity() );
+      }
+    
+    */
+    
+    
+    
+    
+    
+    
     Double localHeating = 0.0;      
         
     /*
@@ -108,7 +127,8 @@ public class Patch {
   public void sproutDaisyToNeighbour(int x, int y, ArrayList<Patch> neighbors) {
 
     double seedThreshold1 = (0.1457 * temp) - (0.0032 * (temp * temp)) - 0.6443;
-    double seedThreshold2 = seedThreshold1 * 0.8;
+    double seedThreshold2 = seedThreshold1 * 0.2;
+    //double seedThreshold2 = seedThreshold1;
     double seedThreshold;
       
       
@@ -157,7 +177,7 @@ public class Patch {
   public void rabbitReproduceToNeighbour(int x, int y, ArrayList<Patch> neighbors) {
 
     double seedThreshold1 = (0.1457 * temp) - (0.0032 * (temp * temp)) - 0.6443;
-    double seedThreshold2 = seedThreshold1 * 0.8;
+    double seedThreshold2 = seedThreshold1 * 0.2;
     double seedThreshold;
 
     if (openGround()) {

@@ -28,14 +28,12 @@ public class Sim {
 
     // System.out.println("Please Input solarLuminosity between 0 and 3");
     // Double solarLuminosity = in.nextDouble();
-
+//
     // Global daisyWorld = new Global(albedoOfSurface, blackPercentage, whitePercentage,
-    //                                blackAlbedo, whiteAlbedo, solarLuminosity);
+    //                                blackAlbedo, whiteAlbedo, solarLuminosity, rabbit percentage);
 
-    Global daisyWorld = new Global(0.4, 10.0, 25.0, 0.35, 0.75, 1.0, 20.0);
+    Global daisyWorld = new Global(0.4, 20.0, 20.0, 0.25, 0.75, 1.1, 20.0);
     daisyWorld.initialise();
-
-    
     
     //output.recordState();
 

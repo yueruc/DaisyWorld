@@ -13,6 +13,6 @@ public class Params {
    // max ticks of the daisy world
    public static int TICKS = 100;
    
-   public static double POLAR_RATIO = 0.75;
+   public static double POLAR_RATIO = 0.7;
 
 }
