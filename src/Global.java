@@ -11,6 +11,7 @@ public class Global {
     private ArrayList<Double> globalTemperature;
     private ArrayList<Integer> whitePopulation;
     private ArrayList<Integer> blackPopulation;
+    private ArrayList<Integer> rabbitPopulation;
 
 
     /* Need to get from command */
@@ -20,13 +21,14 @@ public class Global {
     private Double blackAlbedo;
     private Double whiteAlbedo;
     private Double solarLuminosity;
+    private Double rabbitPercentage;
 
     private Sun sun;
    
 
     public Global(Double albedoOfSurface, Double blackPercentage,
                 Double whitePercentage, Double blackAlbedo,
-                Double whiteAlbedo, Double solarLuminosity){
+                Double whiteAlbedo, Double solarLuminosity, Double rabbitPercentage){
 
         this.albedoOfSurface = albedoOfSurface;
         this.blackPercentage = blackPercentage;
@@ -34,10 +36,13 @@ public class Global {
         this.whiteAlbedo = whiteAlbedo;
         this.blackAlbedo = blackAlbedo;
         this.solarLuminosity = solarLuminosity;
+        this.rabbitPercentage = rabbitPercentage;
            
         globalTemperature = new ArrayList<>();
         whitePopulation = new ArrayList<>();
         blackPopulation = new ArrayList<>();
+        rabbitPopulation = new ArrayList<>();
+        
     }
     
     public void initialise() {      
@@ -56,6 +61,12 @@ public class Global {
         seedDaisies(ground, (int) Math.round(blackPercentage * Params.SIZE / 100), 
                             (int) Math.floor(whitePercentage * Params.SIZE / 100));   
                             
+       
+        generateRabbits(ground, (int) Math.round(rabbitPercentage * Params.SIZE / 100));  
+        
+        
+        
+        
         // Absort from sun
         absorbFromSun();
     
@@ -71,7 +82,7 @@ public class Global {
 
         for (int i = 0; i < Params.LENGTH; i++) {
             for (int j = 0; j < Params.LENGTH; j++) {
-                ground[i][j].absorb(sun);
+                ground[i][j].absorb(sun,i);
             }
         }
     }
@@ -99,6 +110,7 @@ public class Global {
 
         int black = 0;
         int white = 0;
+        int rabbit = 0;
 
         for (int i = 0; i < Params.LENGTH; i ++){
             for (int j = 0; j < Params.LENGTH; j++){
@@ -111,11 +123,14 @@ public class Global {
                         white += 1;
                     }
                 }
+                if (!p.noRabbitYet()) 
+                	rabbit += 1;
             }
         }
 
         blackPopulation.add(black);
         whitePopulation.add(white);
+        rabbitPopulation.add(rabbit);
 
     }
 
@@ -123,6 +138,10 @@ public class Global {
     private void seedDaisies(Patch[][] ground, int blackNum, int whiteNum ){
         randomSeed(ground, blackNum, Daisy.DaisyColor.BLACK);
         randomSeed(ground, whiteNum, Daisy.DaisyColor.WHITE);       
+    }
+    /* Generate with particular numbers of rabbits */
+    private void generateRabbits(Patch[][] ground, int rabbitNum ){
+        randomGenerate(ground, rabbitNum);     
     }
 
 
@@ -151,7 +170,28 @@ public class Global {
             }
         }
     }
+    /* Generate Rabbits at random position with random age */
+    private void randomGenerate(Patch[][] ground, int num){
 
+        Random random = new Random();
+        int n = 0;
+
+        while (n < num){
+
+            int x = random.nextInt(Params.LENGTH);
+            int y = random.nextInt(Params.LENGTH);
+            int age = random.nextInt(Params.MAXAGE);
+
+            if (ground[x][y].noRabbitYet()){
+                Rabbit rb = new Rabbit();
+                    rb.setRabbitAge(age);
+                    ground[x][y].setRabbit(rb);  
+               n ++;
+            }
+        }
+    }
+    
+    
     /* Display the daisy world */
     public void printDaisyWorld(){
 
@@ -185,6 +225,13 @@ public class Global {
                         p.setDaisy(null);
                     }
                 }
+                if(!p.noRabbitYet()) {
+                	Rabbit rb = p.getRabbit();
+                	rb.grow();
+                	if (rb.getAge() >= Params.MAXAGE){
+                        p.setRabbit(null);
+                    }
+                }
             }
                 
         }
@@ -200,6 +247,12 @@ public class Global {
                     ArrayList<Patch> neighbors = p.neighbourPatchs(i, j, ground);
                     p.sproutDaisyToNeighbour(i, j, neighbors);
                 }
+                if (!p.noRabbitYet()) {
+                    ArrayList<Patch> neighbors = p.neighbourPatchs(i, j, ground);
+                    p.rabbitReproduceToNeighbour(i, j, neighbors);
+                }
+                
+                
             }
         }
 
@@ -246,7 +299,11 @@ public class Global {
     public ArrayList<Integer> getBlackPopulation(){
         return blackPopulation;
     }
-
+    
+    public ArrayList<Integer> getRabbitPopulation(){
+        return rabbitPopulation;
+    }
+    
     public ArrayList<Double> getTemp(){
         return globalTemperature;
     }   

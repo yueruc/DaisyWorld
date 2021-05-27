@@ -1,33 +1,39 @@
 import java.util.ArrayList;
+import java.lang.Math;
 import java.util.Random;
+
 
 public class Patch {
     private Double temp;
     private Daisy daisy;
     private Double albedoOfSurface;
+    private Rabbit rabbit;
 
     public Patch (Double albedoOfSurface){
         this.temp = 0.0;
         this.daisy = null;
         this.albedoOfSurface = albedoOfSurface;
+        this.rabbit = null;   
     }
 
     /**
      * Absorb from sun, which each patch's temparature. 
      * @param sun
      */
-    public void absorb (Sun sun){
+    public void absorb (Sun sun, int i){
 
         Double absorbedLuminosity = 0.0;
         
         if (openGround()){
             /* the percentage of absorbed energy is calculated (1 - albedoOfSurface) 
-               and then multiplied by the solar-luminosity give a scaled absorbedLuminosity. */
-            absorbedLuminosity = ((1 - albedoOfSurface) * sun.getLuminosity());
+               and then multiplied by the solar-luminosity give a scaled absorbedLuminosity. 
+               At last, multiplied by a losing-ratio which is calculated based on the distance from the middle row of all patches**/
+            absorbedLuminosity = (  ( (1 - albedoOfSurface) * sun.getLuminosity() ) * ( 1 - ( (2*(1 - Params.POLAR_RATIO)/Params.LENGTH) * Math.abs(i-(Params.LENGTH/2) )) )   );
         }else {
             /* the percentage of absorbed energy is calculated (1 - albedo) 
-               and then multiplied by the solar-luminosity give a scaled absorbedLuminosity. */
-            absorbedLuminosity = ((1 - daisy.getAlbedo()) * sun.getLuminosity());
+               and then multiplied by the solar-luminosity give a scaled absorbedLuminosity. 
+               At last, multiplied by a losing-ratio which is calculated based on the distance from the middle row of all patches*/
+            absorbedLuminosity = (  ( (1 - daisy.getAlbedo()) * sun.getLuminosity() )  *  ( 1 - ( (2*(1 - Params.POLAR_RATIO)/Params.LENGTH) * Math.abs(i-(Params.LENGTH/2) )) ) );
         }
 
         Double localHeating = 0.0;      
@@ -94,7 +100,15 @@ public class Patch {
      */
     public void sproutDaisyToNeighbour (int x, int y, ArrayList<Patch> neighbors){
 
-        double seedThreshold = (0.1457 * temp) - (0.0032 * (temp * temp)) - 0.6443;
+        double seedThreshold1 = (0.1457 * temp) - (0.0032 * (temp * temp)) - 0.6443;
+        double seedThreshold2 = seedThreshold1 * 0.8;
+        double seedThreshold;
+        
+        
+        if (noRabbitYet()) {seedThreshold = seedThreshold1;}
+        else seedThreshold = seedThreshold2;
+        
+        
         Random random = new Random();
         double survivability = random.nextDouble();
 
@@ -122,13 +136,45 @@ public class Patch {
             }
         }        
     }
+    
+    public void rabbitReproduceToNeighbour (int x, int y, ArrayList<Patch> neighbors){
 
+        double seedThreshold1 = (0.1457 * temp) - (0.0032 * (temp * temp)) - 0.6443;
+        double seedThreshold2 = seedThreshold1 * 0.8;
+        double seedThreshold;
+        
+        if (openGround()) {seedThreshold = seedThreshold2;}
+        else seedThreshold = seedThreshold1;
+        
+        Random random = new Random();
+        double survivability = random.nextDouble();
+
+        if (survivability < seedThreshold){
+            
+            // randomly selects an open ground to sprout daisy to from neighbours
+            Patch noRabbitPatch = null;
+            for (Patch p : neighbors) {
+                if (p.noRabbitYet()) {
+                	noRabbitPatch = p;
+                }
+            }
+
+            if (noRabbitPatch != null) {
+            	noRabbitPatch.rabbit = new Rabbit();
+            	noRabbitPatch.rabbit.setRabbitAge(0);
+                }
+            }
+        }        
     /**
      * Check whether the patch contains a daisy or not
      * @return true if patch is empty, false otherwise
      */
     public Boolean openGround (){
         return daisy == null;
+    }
+    
+    public Boolean noRabbitYet() {
+    	return rabbit == null;
     }
 
     public Double getTemp(){
@@ -138,8 +184,16 @@ public class Patch {
     public Daisy getDaisy(){
         return daisy;
     }
+    
+    public Rabbit getRabbit(){
+        return rabbit;
+    }
 
     public void setDaisy(Daisy d){
         daisy = d;
     }    
+    
+    public void setRabbit(Rabbit rb){
+        rabbit = rb;
+    }  
 }
