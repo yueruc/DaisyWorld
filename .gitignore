@@ -27,3 +27,6 @@ hs_err_pid*
 
 # VS Code configuration files
 .vscode/
+
+# Output folder
+/output
