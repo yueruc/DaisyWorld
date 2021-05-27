@@ -5,6 +5,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.util.ArrayList;
 
 public class Output {
 
@@ -41,20 +44,65 @@ public class Output {
 
       File temp = new File(tempFilename);
       temp.createNewFile();
+      writeCsv(tempFilename, null, daisyWorld.getTemp());
       
       File blackPop = new File(blackPopFilename);
       blackPop.createNewFile();
+      writeCsv(blackPopFilename, daisyWorld.getBlackPopulation(), null);
       
       File whitePop = new File(whitePopFilename);
       whitePop.createNewFile();
+      writeCsv(whitePopFilename, daisyWorld.getWhitePopulation(),null);
+
       
       File rabbitPop = new File(rabbitPopFilename);
       rabbitPop.createNewFile();
-      
+      writeCsv(rabbitPopFilename, daisyWorld.getRabbitPopulation(), null);
+            
     } catch (IOException ioe) {
       ioe.printStackTrace();
     }
 
+  }
+
+
+  public void writeCsv(String filename, ArrayList<Integer> dataInt, ArrayList<Double> dataDouble){
+
+    try{
+      BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+      for (Integer i = 1; i <= Params.TICKS; i++) {
+        if (i < Params.TICKS) {
+            writer.write(i.toString() + ',');
+        } else {
+            writer.write(i.toString());
+        }
+      }
+      writer.newLine();
+      if (dataInt == null){
+        for (Integer i = 0; i < dataDouble.size(); i++) {
+          if (i < dataDouble.size() - 1) {
+              writer.write(dataDouble.get(i).toString() + ',');
+          } else {
+              writer.write(dataDouble.get(i).toString());
+          }
+        }
+      }else if (dataDouble == null){
+        for (Integer i = 0; i < dataInt.size(); i++) {
+          if (i < dataInt.size() - 1) {
+              writer.write(dataInt.get(i).toString() + ',');
+          } else {
+              writer.write(dataInt.get(i).toString());
+          }
+        }
+      }
+      writer.close();
+
+     
+
+    } catch (IOException ioe) {
+      ioe.printStackTrace();
+    }
+    
   }
 
   public void recordState() {
