@@ -35,9 +35,9 @@ public class Sim {
     Global daisyWorld = new Global(0.4, 10.0, 25.0, 0.35, 0.75, 1.0, 20.0);
     daisyWorld.initialise();
 
+    Output output = new Output(daisyWorld);
     
-    
-    //output.recordState();
+    output.recordState();
 
     for (int tick = 1; tick < Params.TICKS; tick++) {
       daisyWorld.tick();
@@ -62,8 +62,6 @@ public class Sim {
 
     System.out.println("Temp: ");
     System.out.println(temp);
-
-    Output output = new Output(daisyWorld);
 
     // daisyWorld.printDaisyWorld();
     output.recordState();
