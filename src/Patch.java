@@ -48,10 +48,11 @@ public class Patch {
     }
 
     public void diffuse(ArrayList<Patch> neighbors) {
+        Double diffusedTemp = temp * Params.DIFFUSION_RATIO;
         for (Patch p : neighbors) {
-            p.temp += temp / 8;
+            p.temp += diffusedTemp / 8;
         }
-        temp -= temp * neighbors.size() / 8;
+        temp -= diffusedTemp * neighbors.size() / 8;
     }
     
     /**

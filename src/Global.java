@@ -4,8 +4,6 @@ import java.lang.Math;
 
 
 public class Global {
-
-    public final double DIFFUSE = 0.5;
     
     /* The ground of daisy world */
     private Patch[][] ground;
