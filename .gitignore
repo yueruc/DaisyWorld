@@ -24,3 +24,6 @@ hs_err_pid*
 
 # Local Java RE configuration
 .java-version
+
+# VS Code configuration files
+.vscode/
