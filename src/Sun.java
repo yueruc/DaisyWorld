@@ -1,19 +1,18 @@
 public class Sun {
 
-    private Double solarLuminosity;
+  private Double solarLuminosity;
 
-    public Sun (Double solarLuminosity){
-        this.solarLuminosity = solarLuminosity;
-    }
+  public Sun(Double solarLuminosity) {
+    this.solarLuminosity = solarLuminosity;
+  }
 
-    public void setLuminosity (){
+  public void setLuminosity(){
 
-    }
+  }
 
-    public Double getLuminosity (){
-
-        return solarLuminosity;
-    }
+  public Double getLuminosity() {
+    return solarLuminosity;
+  }
 
 
     
