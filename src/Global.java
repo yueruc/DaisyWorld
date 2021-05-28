@@ -7,6 +7,8 @@ public class Global {
   /* The ground of daisy world */
   private Patch[][] ground;
 
+  /* Record global temperature, population of white, black and rabbit */
+
   private ArrayList<Double> globalTemperature;
   private ArrayList<Integer> whitePopulation;
   private ArrayList<Integer> blackPopulation;

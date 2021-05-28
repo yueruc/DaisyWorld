@@ -9,7 +9,11 @@ public class Patch {
   private Double albedoOfSurface;
   private Rabbit rabbit;
 
-  public Patch (Double albedoOfSurface){
+  /**
+   * Set the Patch to be with the albedo of surface.
+   * @param albedoOfSurface The albedo of the black daisy
+   */
+  public Patch(Double albedoOfSurface) {
     this.temp = 0.0;
     this.daisy = null;
     this.albedoOfSurface = albedoOfSurface;
@@ -28,14 +32,12 @@ public class Patch {
     // and then multiplied by the solar-luminosity give a scaled absorbedLuminosity. 
     // At last, multiplied by a losing-ratio which is calculated based on the distance from 
     // the middle row of all patches
-
     if (openGround()) {
       absorbedLuminosity = ((
         (1 - albedoOfSurface) * sun.getLuminosity()) 
         * (1 - ((2 * (1 - Params.POLAR_RATIO) / Params.LENGTH) 
         * Math.abs(i - (Params.LENGTH / 2)))));
-    } 
-    else {
+    } else {
       // the percentage of absorbed energy is calculated (1 - albedo) 
       // and then multiplied by the solar-luminosity give a scaled absorbedLuminosity. 
       // At last, multiplied by a losing-ratio which is calculated based on the distance 
@@ -43,24 +45,7 @@ public class Patch {
       absorbedLuminosity = (((1 - daisy.getAlbedo()) 
         * sun.getLuminosity()) * (1 - ((2 * (1 - Params.POLAR_RATIO) / Params.LENGTH) 
         * Math.abs(i - (Params.LENGTH / 2)))));
-    }
-
-        /*
-    if (openGround()) {
-        absorbedLuminosity = (
-          (1 - albedoOfSurface) * sun.getLuminosity() );
-      } 
-      else {
-        absorbedLuminosity = (
-        		(1 - daisy.getAlbedo()) * sun.getLuminosity() );
-      }
-    
-    */
-    
-    
-    
-    
-    
+    } 
     
     Double localHeating = 0.0;      
         
@@ -79,6 +64,11 @@ public class Patch {
     temp = (temp + localHeating) / 2;
   }
 
+  /**
+   * diffuse energy to neighbor Patch.
+   * @param neighbors A list of Patch which are adjacent to the patch
+   */
+
   public void diffuse(ArrayList<Patch> neighbors) {
     Double diffusedTemp = temp * Params.DIFFUSION_RATIO;
     for (Patch p : neighbors) {
@@ -88,10 +78,10 @@ public class Patch {
   }
     
   /**
-   * Find all neighbours based on current position
-   * @param x
-   * @param y
-   * @param ground
+   * Find all neighbours based on current position.
+   * @param x current Position x-coordinate
+   * @param y current Position y-coordinate
+   * @param ground the daisy world
    * @return
    */
   public ArrayList<Patch> neighbourPatchs(int x, int y, Patch[][] ground) {               
@@ -119,16 +109,15 @@ public class Patch {
   }
   
   /**
-   * This method is to randomly choose a neighbour and inherits daisy if it is openGround.
-   * @param x
-   * @param y
-   * @param neighbors
+   * This method is to randomly choose a neighbour and sprout a daisy if it is openGround.
+   * @param x current Position x-coordinate
+   * @param y current Position y-coordinate
+   * @param neighbors A list of Patch which are adjacent to the patch
    */
   public void sproutDaisyToNeighbour(int x, int y, ArrayList<Patch> neighbors) {
 
     double seedThreshold1 = (0.1457 * temp) - (0.0032 * (temp * temp)) - 0.6443;
     double seedThreshold2 = seedThreshold1 * 0.2;
-    //double seedThreshold2 = seedThreshold1;
     double seedThreshold;
       
       
@@ -169,10 +158,10 @@ public class Patch {
   }
 
   /**
-   * 
-   * @param x
-   * @param y
-   * @param neighbors
+   * This method is to randomly choose a neighbour and reproduce a rabbit if it is openGround.
+   * @param x current Position x-coordinate
+   * @param y current Position y-coordinate
+   * @param neighbors A list of Patch which are adjacent to the patch
    */
   public void rabbitReproduceToNeighbour(int x, int y, ArrayList<Patch> neighbors) {
 

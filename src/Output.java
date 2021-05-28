@@ -1,12 +1,12 @@
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.util.ArrayList;
 
 public class Output {
@@ -65,33 +65,40 @@ public class Output {
 
   }
 
+  /**
+   * Write data from dataInt or dataDouble to the csv file.
+   * @param filename The file need to be written
+   * @param dataInt  The int data need to be used 
+   * @param dataDouble The double data need to be used
+   */
 
-  public void writeCsv(String filename, ArrayList<Integer> dataInt, ArrayList<Double> dataDouble){
+  public void writeCsv(String filename, ArrayList<Integer> dataInt, ArrayList<Double> dataDouble) {
 
-    try{
+    try {
       BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
       for (Integer i = 1; i <= Params.TICKS; i++) {
         if (i < Params.TICKS) {
-            writer.write(i.toString() + ',');
+          writer.write(i.toString() + ',');
         } else {
-            writer.write(i.toString());
+          writer.write(i.toString());
         }
       }
       writer.newLine();
-      if (dataInt == null){
+
+      if (dataInt == null) {
         for (Integer i = 0; i < dataDouble.size(); i++) {
           if (i < dataDouble.size() - 1) {
-              writer.write(dataDouble.get(i).toString() + ',');
+            writer.write(dataDouble.get(i).toString() + ',');
           } else {
-              writer.write(dataDouble.get(i).toString());
+            writer.write(dataDouble.get(i).toString());
           }
         }
-      }else if (dataDouble == null){
+      } else if (dataDouble == null) {
         for (Integer i = 0; i < dataInt.size(); i++) {
           if (i < dataInt.size() - 1) {
-              writer.write(dataInt.get(i).toString() + ',');
+            writer.write(dataInt.get(i).toString() + ',');
           } else {
-              writer.write(dataInt.get(i).toString());
+            writer.write(dataInt.get(i).toString());
           }
         }
       }
@@ -105,6 +112,7 @@ public class Output {
     
   }
 
+  /* Print daisy world */
   public void recordState() {
     daisyWorld.printDaisyWorld();
   }
