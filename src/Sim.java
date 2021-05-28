@@ -1,5 +1,3 @@
-import java.util.Scanner;
-
 public class Sim {
 
   /**
@@ -9,34 +7,18 @@ public class Sim {
   public static void main(String[] args) {
 
     //Set up the environment based on the following information 
-    Scanner in = new Scanner(System.in);
-
-    System.out.println("Please Input albedoOfSurface between 0 and 1");
-    Double albedoOfSurface = in.nextDouble();
-
-    System.out.println("Please Input blackPercentage between 0 and 100");
-    Double blackPercentage = in.nextDouble();
-
-    System.out.println("Please Input whitePercentage between 0 and 100");
-    Double whitePercentage = in.nextDouble();
-
-    System.out.println("Please Input blackAlbedo between 0 and 1");
-    Double blackAlbedo = in.nextDouble();
-
-    System.out.println("Please Input whiteAlbedo between 0 and 1");
-    Double whiteAlbedo = in.nextDouble();
-
-    System.out.println("Please Input solarLuminosity between 0 and 3");
-    Double solarLuminosity = in.nextDouble();
-
-    System.out.println("Please Input solarLuminosity between 0 and 100");
-    Double rabbitPercentage = in.nextDouble();
+    Double albedoOfSurface = 0.4;
+    Double blackPercentage = 20.0;
+    Double whitePercentage = 20.0;
+    Double blackAlbedo = 0.25;
+    Double whiteAlbedo = 0.75;
+    Double solarLuminosity = 1.0;
+    Double rabbitPercentage = 20.0;
 
     // Use these factors to set up daisyworld, which is same as NetLogo model
     Global daisyWorld = new Global(albedoOfSurface, blackPercentage, whitePercentage,
                                    blackAlbedo, whiteAlbedo, solarLuminosity, rabbitPercentage);
 
-    //Global daisyWorld = new Global(0.4, 20.0, 20.0, 0.25, 0.75, 1.1, 20.0);
     daisyWorld.initialise();
     
     for (int tick = 1; tick < Params.TICKS; tick++) {
@@ -46,7 +28,6 @@ public class Sim {
     Output output = new Output(daisyWorld);
 
     output.recordState();
-    in.close();
   }
     
 }
